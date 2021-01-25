@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
+import Layout from '../layout/index.vue'
 
 Vue.use(VueRouter)
 
@@ -8,15 +8,36 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Layout,
+    children: [
+      {
+        path: '/',
+        name: 'Home',
+        component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue')
+      },
+      {
+        path: 'category',
+        name: 'Category',
+        component: () => import(/* webpackChunkName: "Category" */ '../views/Category.vue')
+      },
+      {
+        path: 'timeline',
+        name: 'TimeLine',
+        component: () => import(/* webpackChunkName: "TimeLine" */ '../views/TimeLine.vue')
+      },
+      {
+        path: 'about',
+        name: 'About',
+        component: () => import(/* webpackChunkName: "About" */ '../views/About.vue')
+      }
+
+    ]
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/*',
+    name: 'CommonNotfoundError',
+    component: () => import(/* webpackChunkName: "CommonNotfoundError" */ '../views/Error-Page/404.vue'),
+    meta: { title: '页面找不到' },
   }
 ]
 
