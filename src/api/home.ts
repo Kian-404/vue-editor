@@ -1,8 +1,9 @@
 import request from '@/utils/request'
 
-export function homeList() {
+export function homeList(data: any) {
   return request({
     url: `/api/homeList`,
-    method: 'get'
+    method: 'get',
+    params:data
   })
 }

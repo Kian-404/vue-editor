@@ -1,16 +1,19 @@
 <template>
   <div class="home">
     <v-row dense>
-      <v-col v-for="(item, i) in items" :key="i" cols="12">
+      <v-col v-show="!loading" v-for="(item, i) in items" :key="i" cols="12">
         <v-card :color="item.articleColor" dark @click="showInfo(item)">
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
-              <v-card-title class="headline" v-text="item.articleTitle"></v-card-title>
+              <v-card-title
+                class="headline"
+                v-text="item.articleTitle"
+              ></v-card-title>
 
               <v-card-subtitle v-text="item.articleTitle"></v-card-subtitle>
 
               <v-card-actions>
-                {{item.createTime}}
+                {{ item.createTime }}
                 <!-- <v-btn
                   v-if="item.artist === 'Ellie Goulding'"
                   class="ml-2 mt-3"
@@ -35,6 +38,9 @@
           </div>
         </v-card>
       </v-col>
+      <v-col v-show="loading" >
+        <v-skeleton-loader class="mx-auto" type="card"></v-skeleton-loader>
+      </v-col>
     </v-row>
     <v-row justify="center">
       <v-col cols="8">
@@ -48,7 +54,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import {homeList } from '@/api/home'
+import { homeList } from "@/api/home";
 import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 @Component({
   components: {
@@ -58,6 +64,7 @@ import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 export default class Home extends Vue {
   selectedItem = 1;
   page = 1;
+  loading = true;
   items = [
     {
       color: "#1F7087",
@@ -96,16 +103,26 @@ export default class Home extends Vue {
       artist: "Ellie Goulding",
     },
   ];
-  showInfo(item: unknown) {
+  showInfo(item: { id: number }) {
     console.log(item);
+    this.$router.push(`/info/${item.id}`);
   }
-  mounted(){
-    homeList().then(res =>{
-      console.log(res)
-      this.items = res.data
-    }).catch(err =>{
-      console.log(err)
-    })
+  mounted() {
+    const p = {
+      pageindex: 1,
+      pageSize: 10,
+    };
+    homeList(p)
+      .then((res) => {
+        console.log(res);
+        this.items = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 }
 </script>
