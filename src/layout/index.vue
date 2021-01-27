@@ -22,5 +22,5 @@ import Footer from "@/layout/footer/index.vue";
     Footer,
   },
 })
-export default class Home extends Vue {}
+export default class Layout extends Vue {}
 </script>

@@ -49,7 +49,7 @@ service.interceptors.request.use((config: any) => {
   //     config.headers['X-SessionId'] = getSessionId(); // 让每个请求携带token--['X-Token']为自定义key
   //   }
   return config;
-}, (error: any) => {
+}, (error: Error) => {
   Promise.reject(error);
 });
 
@@ -73,7 +73,7 @@ service.interceptors.response.use(
       return res;
     }
   },
-  (error: any) => {
+  (error: Error) => {
     // 异常处理
     console.log(error)
     pending = [];
